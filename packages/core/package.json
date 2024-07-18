@@ -1,0 +1,48 @@
+{
+  "name": "@annotate-image/core",
+  "type": "module",
+  "version": "0.1.0",
+  "packageManager": "pnpm@9.5.0",
+  "description": "image annotation and editing on web pages.",
+  "author": "SK-ERIC",
+  "license": "MIT",
+  "homepage": "https://github.com/SK-ERIC/annotate-image",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SK-ERIC/annotate-image.git"
+  },
+  "bugs": "https://github.com/SK-ERIC/annotate-image/issues",
+  "keywords": [
+    "image",
+    "annotation",
+    "marker"
+  ],
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "build": "tsup",
+    "dev": "tsup --watch"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^2.23.0",
+    "@antfu/ni": "^0.22.0",
+    "bumpp": "^9.4.1",
+    "tsup": "^8.1.2",
+    "turbo": "^2.0.7",
+    "typescript": "^5.5.3",
+    "vite": "^5.3.4"
+  }
+}
