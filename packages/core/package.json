@@ -21,13 +21,13 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "require": "./dist/index.js",
-      "import": "./dist/index.mjs"
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.js"
     }
   },
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
@@ -35,14 +35,5 @@
     "start": "tsx src/index.ts",
     "build": "tsup",
     "dev": "tsup --watch"
-  },
-  "devDependencies": {
-    "@antfu/eslint-config": "^2.23.0",
-    "@antfu/ni": "^0.22.0",
-    "bumpp": "^9.4.1",
-    "tsup": "^8.1.2",
-    "turbo": "^2.0.7",
-    "typescript": "^5.5.3",
-    "vite": "^5.3.4"
   }
 }

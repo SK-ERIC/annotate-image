@@ -1,30 +1,37 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
+import { reactive, ref } from "vue";
+import AnnotateImage from "@annotate-image/vue";
+
+const path = ref([]);
+
+const options = reactive({});
+
+function handleInputFn(value: any) {
+  console.log(value);
+}
 </script>
 
 <template>
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+  <div class="image-box">
+    <img
+      src="https://ljchat.obs.cn-east-3.myhuaweicloud.com/completeRepair/4cd54c21f0454b0118fde7d777b1df1d26bd4dca90db3f6252313c71980665a9_8115531998157993.jpg"
+      alt=""
+    />
+    <annotate-image
+      v-model="path"
+      :options="options"
+      @input="handleInputFn"
+    ></annotate-image>
   </div>
-  <HelloWorld msg="Vite + Vue" />
 </template>
 
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+.image-box {
+  width: 600px;
+  position: relative;
+
+  img {
+    width: 100%;
+  }
 }
 </style>

@@ -13,6 +13,5 @@ export default defineConfig((options) => {
     dts: true,
     format: ["esm", "cjs"],
     minify: !options.watch,
-    onSuccess: "cp -a public/. dist",
   };
 });
