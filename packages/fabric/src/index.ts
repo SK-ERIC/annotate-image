@@ -369,7 +369,7 @@ export class PolygonDrawer {
     if (this.points.length >= 3) {
       this.drawFinalPolygon();
     } else {
-      alert("多边形需要至少三个点");
+      console.warn("Polygons require at least three points");
     }
     this.clearTemporaryElements();
     if (this.isContinuousDrawing) {
@@ -404,7 +404,7 @@ export class PolygonDrawer {
 
     this.canvas.add(this.currentPolygon);
     this.polygons.push(this.currentPolygon);
-    this.canvas.setActiveObject(this.currentPolygon);
+    // this.canvas.setActiveObject(this.currentPolygon);
 
     this.tempPoints.forEach((point, index) => {
       (point as any).polygon = this.currentPolygon;
@@ -600,10 +600,6 @@ export class PolygonDrawer {
 
   public toggleCoordinateSystem() {
     this.useNormalizedCoordinates = !this.useNormalizedCoordinates;
-    console.debug(
-      `坐标系已切换为 ${this.useNormalizedCoordinates ? "0-1度量值" : "绝对值"}`
-    );
-
     this.callbacks.onToggleCoordinate?.({
       useNormalizedCoordinates: this.useNormalizedCoordinates,
       polygons: this.getPolygonsData(),

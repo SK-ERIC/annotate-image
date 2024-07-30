@@ -5,11 +5,18 @@ English | [简体中文](./README.zh-CN.md)
 ## Install
 
 ```bash
-# vue
-pnpm add @annotate-image/vue
+pnpm add @annotate-image/core
 
-# react
-pnpm add @annotate-image/react
+# or
+
+pnpm add @annotate-image/fabric
+
+# Vue and React versions are not yet completed
+# Vue (not yet available)
+# pnpm add @annotate-image/vue
+
+# React (not yet available)
+# pnpm add @annotate-image/react
 
 ```
 
