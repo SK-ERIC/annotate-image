@@ -110,6 +110,12 @@ importers:
 
   packages/core: {}
 
+  packages/react:
+    dependencies:
+      '@annotate-image/core':
+        specifier: workspace:*
+        version: link:../core
+
   packages/vue:
     dependencies:
       '@annotate-image/core':
