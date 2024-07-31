@@ -9,7 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@annotate-image/core": "workspace:*"
+    "@annotate-image/core": "workspace:*",
+    "@annotate-image/fabric": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.2.2",

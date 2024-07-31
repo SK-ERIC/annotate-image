@@ -66,8 +66,9 @@ button:focus-visible {
 }
 
 .annotate-container {
-  width: 500px;
-  height: 500px;
+  width: 1000px;
+  aspect-ratio: 16/9;
+  /* height: 500px; */
   border: 1px solid #ccc;
   position: relative;
 }

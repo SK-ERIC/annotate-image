@@ -78,6 +78,9 @@ importers:
       '@annotate-image/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@annotate-image/fabric':
+        specifier: workspace:*
+        version: link:../../packages/fabric
     devDependencies:
       typescript:
         specifier: ^5.2.2

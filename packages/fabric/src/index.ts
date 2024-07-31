@@ -57,6 +57,8 @@ interface Options {
   polygonStroke?: string;
   polygonStrokeWidth?: number;
   cornerColor?: string;
+  closeOnDoubleClick?: boolean;
+  addPointOnDoubleClickClose?: boolean;
 }
 
 export class PolygonDrawer {
@@ -73,6 +75,8 @@ export class PolygonDrawer {
   private cornerColor: string;
   private evented: boolean;
   private selectable: boolean;
+  private closeOnDoubleClick: boolean;
+  private addPointOnDoubleClickClose: boolean;
   private callbacks: Callbacks;
   private isDrawing: boolean;
   private isContinuousDrawing: boolean;
@@ -104,6 +108,9 @@ export class PolygonDrawer {
     this.polygonStroke = options.polygonStroke || "blue";
     this.polygonStrokeWidth = options.polygonStrokeWidth || 2;
     this.cornerColor = options.cornerColor || "red";
+    this.closeOnDoubleClick = options.closeOnDoubleClick || false;
+    this.addPointOnDoubleClickClose =
+      options.addPointOnDoubleClickClose || false;
     this.evented = !this.readOnly;
     this.selectable = !this.readOnly;
 
@@ -177,9 +184,25 @@ export class PolygonDrawer {
       }
     });
 
-    this.canvas.on("mouse:dblclick", () => {
+    this.canvas.on("mouse:dblclick", (e: TPointerEventInfo<TPointerEvent>) => {
       if (this.isDrawing) {
-        this.finishPolygon();
+        if (this.points.length <= 0) {
+          return;
+        }
+
+        const pointer = this.canvas.getPointer(e.e);
+
+        if (this.isPointClose(pointer, this.points[0], this.snapTolerance)) {
+          this.finishPolygon();
+          return;
+        }
+
+        if (this.closeOnDoubleClick) {
+          if (this.addPointOnDoubleClickClose) {
+            this.addPoint(e);
+          }
+          this.finishPolygon();
+        }
       }
     });
 
@@ -405,13 +428,6 @@ export class PolygonDrawer {
     this.canvas.add(this.currentPolygon);
     this.polygons.push(this.currentPolygon);
     // this.canvas.setActiveObject(this.currentPolygon);
-
-    this.tempPoints.forEach((point, index) => {
-      (point as any).polygon = this.currentPolygon;
-      (point as any).polygonIndex = index;
-    });
-
-    this.tempPoints = [];
     this.isDrawing = false;
     this.callbacks.onChange?.(this.getPolygonsData());
   }
