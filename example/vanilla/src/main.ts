@@ -1,22 +1,20 @@
 import "./style.css";
 
-import { AnnotateImage } from "@annotate-image/core";
-
 import { PolygonDrawer } from "@annotate-image/fabric";
 
 document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
-  <div class="annotate-container">
-  <img src="https://images.pexels.com/photos/15763644/pexels-photo-15763644.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" />
+  <div>
+    <button id="button1">反选</button>
+    <button id="button2">多边形</button>
+    <button id="button3">清空对象</button>
+    <button id="button4">清空画布</button>
+    <div class="annotate-container">
+      <img src="https://images.pexels.com/photos/15763644/pexels-photo-15763644.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" />
+    </div>
   </div>
 `;
 
-// new AnnotateImage(".annotate-container", {
-//   onInput: (data) => {
-//     console.log("onInput :>> ", data);
-//   },
-// });
-
-new PolygonDrawer(
+var instance = new PolygonDrawer(
   "annotate-container",
   {
     canvasId: "my-canvas",
@@ -25,10 +23,10 @@ new PolygonDrawer(
     originalHeight: 1080,
     snapTolerance: 10,
     useNormalizedCoordinates: true,
-    polygonFill: "rgba(0, 0, 255, 0.3)",
-    polygonStroke: "blue",
+    polygonFill: "rgb(255, 0, 0, 0.3)",
+    polygonStroke: "red",
     polygonStrokeWidth: 2,
-    cornerColor: "red",
+    cornerColor: "blue",
     closeOnDoubleClick: true,
     addPointOnDoubleClickClose: false,
   },
@@ -74,7 +72,7 @@ new PolygonDrawer(
 
       instance.loadPolygons(sampleData);
 
-      instance.startDrawing();
+      // instance.startDrawing();
     },
     onChange: (data) => console.log("Polygons changed:", data),
     onDelete: (data) => console.log("Polygon deleted:", data),
@@ -87,3 +85,16 @@ new PolygonDrawer(
     onDrawBackground: () => console.log("Background image drawn"),
   }
 );
+
+document.getElementById("button1")!.onclick = () => {
+  instance.toggleSelectionMode();
+};
+document.getElementById("button2")!.onclick = () => {
+  instance.startDrawing();
+};
+document.getElementById("button3")!.onclick = () => {
+  instance.clearObjects();
+};
+document.getElementById("button4")!.onclick = () => {
+  instance.clearCanvas();
+};

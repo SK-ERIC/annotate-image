@@ -6,6 +6,7 @@ import {
   Line,
   Point,
   Polygon,
+  Rect,
   TDataUrlOptions,
   TPointerEvent,
   TPointerEventInfo,
@@ -87,6 +88,9 @@ export class PolygonDrawer {
   private tempPolygon: Polygon | null;
   private mousePoint: Circle | null;
   private currentPolygon: Polygon | null;
+  private selectionMode: boolean;
+  private overlayLayer: Rect | null;
+  private maskLayerMap: Map<FabricObject, string>;
 
   constructor(
     parentClass: string,
@@ -113,6 +117,9 @@ export class PolygonDrawer {
       options.addPointOnDoubleClickClose || false;
     this.evented = !this.readOnly;
     this.selectable = !this.readOnly;
+    this.selectionMode = false;
+    this.overlayLayer = null;
+    this.maskLayerMap = new Map();
 
     this.callbacks = {
       onReady: callbacks.onReady || (() => {}),
@@ -427,7 +434,7 @@ export class PolygonDrawer {
 
     this.canvas.add(this.currentPolygon);
     this.polygons.push(this.currentPolygon);
-    // this.canvas.setActiveObject(this.currentPolygon);
+    this.canvas.setActiveObject(this.currentPolygon);
     this.isDrawing = false;
     this.callbacks.onChange?.(this.getPolygonsData());
   }
@@ -576,6 +583,66 @@ export class PolygonDrawer {
   public clearCanvas() {
     this.canvas.clear();
     this.polygons = [];
+    this.selectionMode = false;
+  }
+
+  public clearObjects() {
+    this.canvas.discardActiveObject();
+    this.canvas.getObjects().forEach((obj) => {
+      this.canvas.remove(obj);
+    });
+    this.polygons = [];
+    this.selectionMode = false;
+  }
+
+  public async toggleSelectionMode(mode?: boolean) {
+    if (typeof mode === "boolean") {
+      this.selectionMode = mode;
+    } else {
+      this.selectionMode = !this.selectionMode;
+    }
+
+    if (this.selectionMode) {
+      this.maskLayerMap.clear();
+      const overlayLayer = new Rect({
+        left: 0,
+        top: 0,
+        width: this.canvas.getWidth(),
+        height: this.canvas.getHeight(),
+        fill: this.polygonFill || "rgb(255, 0, 0, 0.6)",
+        selectable: false,
+        evented: false,
+        absolutePositioned: true,
+      });
+
+      this.polygons.map((o) => {
+        this.maskLayerMap.set(o, o.fill as string);
+        o.set("globalCompositeOperation", "destination-out");
+        o.set("fill", "#000");
+      });
+
+      this.canvas.add(overlayLayer);
+      this.canvas.sendObjectToBack(overlayLayer);
+      this.overlayLayer = overlayLayer;
+    } else {
+      if (this.overlayLayer) {
+        this.canvas.remove(this.overlayLayer);
+        this.overlayLayer = null;
+      }
+
+      this.polygons.forEach((polygon) => {
+        polygon.set("globalCompositeOperation", "source-over");
+        polygon.set("fill", this.maskLayerMap.get(polygon) || this.polygonFill);
+      });
+
+      this.maskLayerMap.clear();
+    }
+
+    this.canvas.renderAll();
+  }
+
+  public isSelectionMode(): boolean {
+    return this.selectionMode;
   }
 
   public async exportCanvasAsImage(callback?: (imageData: string) => void) {
@@ -629,4 +696,9 @@ export class PolygonDrawer {
       polygons: this.getPolygonsData(),
     };
   }
+
+  /**
+   * 提供外部销毁当前实例，以及页面中插入的元素，以及所有事件
+   */
+  public destroy() {}
 }
