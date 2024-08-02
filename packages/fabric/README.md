@@ -15,35 +15,35 @@ npm install @annotate-image/fabric
 ### Import and Initialize
 
 ```typescript
-import { PolygonDrawer } from "@annotate-image/fabric";
+import { PolygonDrawer } from '@annotate-image/fabric'
 
 const polygonDrawer = new PolygonDrawer(
-  "canvas-container",
+  'canvas-container',
   {
-    canvasId: "my-canvas",
+    canvasId: 'my-canvas',
     readOnly: false,
     originalWidth: 1920,
     originalHeight: 1080,
     snapTolerance: 10,
     useNormalizedCoordinates: true,
-    polygonFill: "rgba(0, 0, 255, 0.3)",
-    polygonStroke: "blue",
+    polygonFill: 'rgba(0, 0, 255, 0.3)',
+    polygonStroke: 'blue',
     polygonStrokeWidth: 2,
-    cornerColor: "red",
+    cornerColor: 'red',
   },
   {
-    onReady: (instance) => console.log("Canvas ready:", instance),
-    onChange: (data) => console.log("Polygons changed:", data),
-    onDelete: (data) => console.log("Polygon deleted:", data),
-    onToggleCoordinate: (data) =>
-      console.log("Coordinate system toggled:", data),
-    onResize: (data) => console.log("Canvas resized:", data),
-    onScaling: (object) => console.log("Scaling:", object),
-    onLoad: () => console.log("Polygons loaded"),
-    onExport: (imageData) => console.log("Canvas exported:", imageData),
-    onDrawBackground: () => console.log("Background image drawn"),
+    onReady: instance => console.log('Canvas ready:', instance),
+    onChange: data => console.log('Polygons changed:', data),
+    onDelete: data => console.log('Polygon deleted:', data),
+    onToggleCoordinate: data =>
+      console.log('Coordinate system toggled:', data),
+    onResize: data => console.log('Canvas resized:', data),
+    onScaling: object => console.log('Scaling:', object),
+    onLoad: () => console.log('Polygons loaded'),
+    onExport: imageData => console.log('Canvas exported:', imageData),
+    onDrawBackground: () => console.log('Background image drawn'),
   }
-);
+)
 ```
 
 ### Drawing Polygons
@@ -51,7 +51,7 @@ const polygonDrawer = new PolygonDrawer(
 To start drawing polygons:
 
 ```typescript
-polygonDrawer.startDrawing();
+polygonDrawer.startDrawing()
 ```
 
 ### Loading Polygons
@@ -62,7 +62,7 @@ To load polygons from data:
 const sampleData = {
   polygons: [
     {
-      id: "polygon_1",
+      id: 'polygon_1',
       points: [
         { x: 0.1, y: 0.1 },
         { x: 0.2, y: 0.1 },
@@ -70,12 +70,12 @@ const sampleData = {
         { x: 0.1, y: 0.2 },
       ],
       useNormalizedCoordinates: true,
-      fill: "rgba(0, 0, 255, 0.3)",
-      stroke: "blue",
+      fill: 'rgba(0, 0, 255, 0.3)',
+      stroke: 'blue',
       strokeWidth: 2,
     },
     {
-      id: "polygon_2",
+      id: 'polygon_2',
       points: [
         { x: 0.3, y: 0.3 },
         { x: 0.4, y: 0.3 },
@@ -83,20 +83,20 @@ const sampleData = {
         { x: 0.3, y: 0.4 },
       ],
       useNormalizedCoordinates: true,
-      fill: "rgba(255, 0, 0, 0.3)",
-      stroke: "red",
+      fill: 'rgba(255, 0, 0, 0.3)',
+      stroke: 'red',
       strokeWidth: 2,
     },
   ],
   backgroundImage: {
-    url: "https://www.example.com/path/to/image.jpg",
+    url: 'https://www.example.com/path/to/image.jpg',
     width: 1920,
     height: 1080,
   },
-};
+}
 polygonDrawer.loadPolygons(sampleData, () => {
-  console.log("Polygons loaded successfully");
-});
+  console.log('Polygons loaded successfully')
+})
 ```
 
 ### Drawing a Background Image
@@ -105,13 +105,13 @@ To draw a background image:
 
 ```typescript
 polygonDrawer.drawBackgroundImage(
-  "https://www.example.com/path/to/image.jpg",
+  'https://www.example.com/path/to/image.jpg',
   1920,
   1080,
   () => {
-    console.log("Background image drawn successfully");
+    console.log('Background image drawn successfully')
   }
-);
+)
 ```
 
 ### Exporting the Canvas as an Image
@@ -120,10 +120,10 @@ To export the canvas as an image:
 
 ```typescript
 polygonDrawer.exportCanvasAsImage((imageData) => {
-  console.log("Canvas exported as image:", imageData);
+  console.log('Canvas exported as image:', imageData)
   // You can open the image in a new tab
-  window.open(imageData);
-});
+  window.open(imageData)
+})
 ```
 
 ### Deleting Selected Polygons
@@ -131,7 +131,7 @@ polygonDrawer.exportCanvasAsImage((imageData) => {
 To delete selected polygons:
 
 ```typescript
-polygonDrawer.deleteSelectedPolygon();
+polygonDrawer.deleteSelectedPolygon()
 ```
 
 ### Toggling the Coordinate System
@@ -139,7 +139,7 @@ polygonDrawer.deleteSelectedPolygon();
 To toggle the coordinate system between absolute values and 0-1 normalized values:
 
 ```typescript
-polygonDrawer.toggleCoordinateSystem();
+polygonDrawer.toggleCoordinateSystem()
 ```
 
 ### Getting Canvas Data
@@ -147,8 +147,8 @@ polygonDrawer.toggleCoordinateSystem();
 To get the current canvas data:
 
 ```typescript
-const canvasData = polygonDrawer.getCanvasData();
-console.log(canvasData);
+const canvasData = polygonDrawer.getCanvasData()
+console.log(canvasData)
 ```
 
 ## Options
