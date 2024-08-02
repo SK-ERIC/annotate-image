@@ -4,12 +4,16 @@ import { PolygonDrawer } from "@annotate-image/fabric";
 
 document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   <div>
-    <button id="button1">反选</button>
-    <button id="button2">多边形</button>
-    <button id="button3">清空对象</button>
-    <button id="button4">清空画布</button>
+    <button id="button1">toggleSelectionMode</button>
+    <button id="button2">startDrawing</button>
+    <button id="button3">clearObjects</button>
+    <button id="button4">clearCanvas</button>
+    <button id="button5">renderPolygonsToImage</button>
     <div class="annotate-container">
       <img src="https://images.pexels.com/photos/15763644/pexels-photo-15763644.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" />
+    </div>
+
+    <div id="img-box">
     </div>
   </div>
 `;
@@ -97,4 +101,49 @@ document.getElementById("button3")!.onclick = () => {
 };
 document.getElementById("button4")!.onclick = () => {
   instance.clearCanvas();
+};
+
+const drawer = new PolygonDrawer(undefined, {
+  originalWidth: 800,
+  originalHeight: 600,
+  polygonFill: "rgba(255, 0, 0, 0.6)",
+  polygonStroke: "red",
+  polygonStrokeWidth: 2,
+  cornerColor: "green",
+});
+
+document.getElementById("button5")!.onclick = () => {
+  const loadData = {
+    polygons: [
+      {
+        id: "polygon1",
+        points: [
+          { x: 50, y: 50 },
+          { x: 150, y: 50 },
+          { x: 100, y: 150 },
+        ],
+        fill: "rgba(0, 255, 0, 0.5)",
+        stroke: "green",
+        strokeWidth: 2,
+      },
+    ],
+    backgroundImage: {
+      url: "https://images.pexels.com/photos/26832682/pexels-photo-26832682.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+      // width: 1920,
+      // height: 1080,
+    },
+  };
+
+  drawer.setOriginalSize({
+    width: 1920,
+    height: 1080,
+  });
+
+  drawer.renderPolygonsToImage(loadData, true).then((imageData) => {
+    console.log("imageData :>> ", imageData);
+
+    const img = document.createElement("img");
+    img.src = imageData;
+    document.getElementById("img-box")!.appendChild(img);
+  });
 };

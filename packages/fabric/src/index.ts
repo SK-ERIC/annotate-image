@@ -93,15 +93,10 @@ export class PolygonDrawer {
   private maskLayerMap: Map<FabricObject, string>;
 
   constructor(
-    parentClass: string,
+    parentClass?: string,
     options: Options = {},
     callbacks: Callbacks = {}
   ) {
-    const parentElement = document.querySelector(`.${parentClass}`);
-    if (!parentElement) {
-      throw new Error(`Parent element with class ${parentClass} not found.`);
-    }
-
     this.canvasId = options.canvasId || "drawing-canvas";
     this.readOnly = options.readOnly || false;
     this.originalWidth = options.originalWidth || 1920;
@@ -143,9 +138,25 @@ export class PolygonDrawer {
     this.mousePoint = null;
     this.currentPolygon = null;
 
-    this.canvas = this.createCanvas(parentElement);
-    this.initEventListeners();
-    this.callbacks.onReady?.(this);
+    if (parentClass) {
+      const parentElement = document.querySelector(`.${parentClass}`);
+      if (!parentElement) {
+        throw new Error(`Parent element with class ${parentClass} not found.`);
+      }
+      this.canvas = this.createCanvas(parentElement);
+    } else {
+      this.canvas = new Canvas(this.canvasId);
+    }
+
+    if (parentClass) {
+      this.initEventListeners();
+      this.callbacks.onReady?.(this);
+    }
+  }
+
+  public setOriginalSize({ width, height }: { width: number; height: number }) {
+    this.originalWidth = width;
+    this.originalHeight = height;
   }
 
   private createCanvas(parentElement: Element): Canvas {
@@ -162,22 +173,9 @@ export class PolygonDrawer {
       return;
     }
 
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Delete" || event.key === "Backspace") {
-        this.deleteSelectedPolygon();
-      }
-    });
+    document.addEventListener("keydown", this.handleKeyDown);
 
-    window.addEventListener("resize", () => {
-      const parentElement = this.canvas.getElement().parentElement;
-      if (parentElement) {
-        this.canvas.setDimensions({
-          width: parentElement.clientWidth,
-          height: parentElement.clientHeight,
-        });
-        this.callbacks.onResize?.(this.getCanvasData());
-      }
-    });
+    window.addEventListener("resize", this.handleResize);
 
     this.canvas.on("mouse:down", (e: TPointerEventInfo<TPointerEvent>) => {
       if (this.isDrawing) {
@@ -240,6 +238,23 @@ export class PolygonDrawer {
       }
     });
   }
+
+  private handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key === "Delete" || event.key === "Backspace") {
+      this.deleteSelectedPolygon();
+    }
+  };
+
+  private handleResize = () => {
+    const parentElement = this.canvas.getElement().parentElement;
+    if (parentElement) {
+      this.canvas.setDimensions({
+        width: parentElement.clientWidth,
+        height: parentElement.clientHeight,
+      });
+      this.callbacks.onResize?.(this.getCanvasData());
+    }
+  };
 
   private isPointClose(
     point1: IPoint,
@@ -697,8 +712,120 @@ export class PolygonDrawer {
     };
   }
 
-  /**
-   * 提供外部销毁当前实例，以及页面中插入的元素，以及所有事件
-   */
-  public destroy() {}
+  private async drawPolygonsOnCanvas(
+    canvas: Canvas,
+    data: LoadData,
+    selectionMode: boolean
+  ): Promise<void> {
+    if (data.backgroundImage) {
+      const img = await FabricImage.fromURL(data.backgroundImage.url, {
+        crossOrigin: "anonymous",
+      });
+      if (data.backgroundImage.width && data.backgroundImage.height) {
+        img.set({
+          width: data.backgroundImage.width,
+          height: data.backgroundImage.height,
+        });
+      } else {
+        img.scaleToWidth(canvas.getWidth());
+        img.scaleToHeight(canvas.getHeight());
+      }
+      canvas.set("backgroundImage", img);
+    }
+
+    data.polygons.forEach((polygonData) => {
+      const points = polygonData.points.map((p) => ({
+        x: polygonData.useNormalizedCoordinates
+          ? p.x * this.originalWidth
+          : p.x,
+        y: polygonData.useNormalizedCoordinates
+          ? p.y * this.originalHeight
+          : p.y,
+      }));
+
+      const polygon = new Polygon(points, {
+        left: Math.min(...points.map((p) => p.x)),
+        top: Math.min(...points.map((p) => p.y)),
+        fill: polygonData.fill || this.polygonFill,
+        stroke: polygonData.stroke || this.polygonStroke,
+        strokeWidth: polygonData.strokeWidth || this.polygonStrokeWidth,
+        selectable: this.selectable,
+        evented: this.evented,
+        objectCaching: false,
+        cornerColor: this.cornerColor,
+        hasBorders: true,
+        hasControls: true,
+        perPixelTargetFind: true,
+      });
+
+      canvas.add(polygon);
+    });
+
+    if (selectionMode) {
+      const overlayLayer = new Rect({
+        left: 0,
+        top: 0,
+        width: canvas.getWidth(),
+        height: canvas.getHeight(),
+        fill: this.polygonFill || "rgba(0, 0, 255, 0.3)",
+        selectable: false,
+        evented: false,
+        absolutePositioned: true,
+      });
+
+      canvas.add(overlayLayer);
+      canvas.sendObjectToBack(overlayLayer);
+
+      canvas.getObjects("polygon").forEach((polygon) => {
+        polygon.set("globalCompositeOperation", "destination-out");
+        polygon.set("fill", "#000");
+      });
+    }
+
+    canvas.renderAll();
+  }
+
+  public async renderPolygonsToImage(
+    data: LoadData,
+    selectionMode: boolean = false
+  ): Promise<string> {
+    const canvas = new Canvas(null as any, {
+      width: this.originalWidth,
+      height: this.originalHeight,
+    });
+
+    await this.drawPolygonsOnCanvas(canvas, data, selectionMode);
+
+    return canvas.toDataURL({
+      format: "png",
+      quality: 1,
+    } as TDataUrlOptions);
+  }
+
+  public destroy() {
+    this.canvas.off();
+
+    document.removeEventListener("keydown", this.handleKeyDown);
+    window.removeEventListener("resize", this.handleResize);
+
+    this.canvas.clear();
+
+    if (this.canvasId) {
+      const canvasElement = document.getElementById(this.canvasId);
+      if (canvasElement && canvasElement.parentNode) {
+        canvasElement.parentNode.removeChild(canvasElement);
+      }
+    }
+
+    this.canvas = null as any;
+    this.currentPolygon = null;
+    this.tempPolygon = null;
+    this.mousePoint = null;
+    this.points = [];
+    this.polygons = [];
+    this.tempLines = [];
+    this.tempPoints = [];
+    this.overlayLayer = null;
+    this.maskLayerMap.clear();
+  }
 }
