@@ -5,6 +5,10 @@
     "module": "ESNext",
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@annotate-image/fabric":["../../packages/fabric/src"]
+    },
 
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -21,7 +25,9 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+
+    
   },
   "include": ["src"]
 }
