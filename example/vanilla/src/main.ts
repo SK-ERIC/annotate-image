@@ -78,14 +78,14 @@ const instance = new PolygonDrawer(
 
       // instance.startDrawing();
     },
-    onChange: data => console.log('Polygons changed:', data),
-    onDelete: data => console.log('Polygon deleted:', data),
-    onToggleCoordinate: data =>
+    onChange: (data: any) => console.log('Polygons changed:', data),
+    onDelete: (data: any) => console.log('Polygon deleted:', data),
+    onToggleCoordinate: (data: any) =>
       console.log('Coordinate system toggled:', data),
-    onResize: data => console.log('Canvas resized:', data),
-    onScaling: object => console.log('Scaling:', object),
+    onResize: (data: any) => console.log('Canvas resized:', data),
+    onScaling: (object: any) => console.log('Scaling:', object),
     onLoad: () => console.log('Polygons loaded'),
-    onExport: imageData => console.log('Canvas exported:', imageData),
+    onExport: (imageData: any) => console.log('Canvas exported:', imageData),
     onDrawBackground: () => console.log('Background image drawn')
   }
 )

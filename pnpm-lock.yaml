@@ -38,19 +38,9 @@ importers:
 
   example/vanilla:
     dependencies:
-      '@annotate-image/core':
-        specifier: workspace:*
-        version: link:../../packages/core
       '@annotate-image/fabric':
         specifier: workspace:*
         version: link:../../packages/fabric
-    devDependencies:
-      typescript:
-        specifier: ^5.2.2
-        version: 5.5.3
-      vite:
-        specifier: ^5.3.4
-        version: 5.3.4
 
   example/vue:
     dependencies:
@@ -72,16 +62,6 @@ importers:
       fabric:
         specifier: ^6.0.2
         version: 6.0.2
-
-  packages/vue:
-    dependencies:
-      '@annotate-image/core':
-        specifier: workspace:*
-        version: link:../core
-    devDependencies:
-      vue:
-        specifier: ^3.4.31
-        version: 3.4.34(typescript@5.5.3)
 
 packages:
 
