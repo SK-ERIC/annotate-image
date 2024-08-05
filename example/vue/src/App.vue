@@ -1,22 +1,19 @@
 <script setup lang="ts">
-import { reactive, ref } from "vue";
-import AnnotateImage from "@annotate-image/vue";
+import { reactive, ref } from 'vue'
+import AnnotateImage from '@annotate-image/vue'
 
-const path = ref([]);
+const path = ref([])
 
-const options = reactive({});
+const options = reactive({})
 
 function handleInputFn(value: any) {
-  console.log(value);
+  console.log(value)
 }
 </script>
 
 <template>
   <div class="image-box">
-    <img
-      src=""
-      alt=""
-    />
+    <img src="" alt="" />
     <annotate-image
       v-model="path"
       :options="options"

@@ -29,7 +29,7 @@ const polygonDrawer = new PolygonDrawer(
     polygonFill: 'rgba(0, 0, 255, 0.3)',
     polygonStroke: 'blue',
     polygonStrokeWidth: 2,
-    cornerColor: 'red',
+    cornerColor: 'red'
   },
   {
     onReady: instance => console.log('Canvas ready:', instance),
@@ -41,7 +41,7 @@ const polygonDrawer = new PolygonDrawer(
     onScaling: object => console.log('Scaling:', object),
     onLoad: () => console.log('Polygons loaded'),
     onExport: imageData => console.log('Canvas exported:', imageData),
-    onDrawBackground: () => console.log('Background image drawn'),
+    onDrawBackground: () => console.log('Background image drawn')
   }
 )
 ```
@@ -67,12 +67,12 @@ const sampleData = {
         { x: 0.1, y: 0.1 },
         { x: 0.2, y: 0.1 },
         { x: 0.2, y: 0.2 },
-        { x: 0.1, y: 0.2 },
+        { x: 0.1, y: 0.2 }
       ],
       useNormalizedCoordinates: true,
       fill: 'rgba(0, 0, 255, 0.3)',
       stroke: 'blue',
-      strokeWidth: 2,
+      strokeWidth: 2
     },
     {
       id: 'polygon_2',
@@ -80,19 +80,19 @@ const sampleData = {
         { x: 0.3, y: 0.3 },
         { x: 0.4, y: 0.3 },
         { x: 0.4, y: 0.4 },
-        { x: 0.3, y: 0.4 },
+        { x: 0.3, y: 0.4 }
       ],
       useNormalizedCoordinates: true,
       fill: 'rgba(255, 0, 0, 0.3)',
       stroke: 'red',
-      strokeWidth: 2,
-    },
+      strokeWidth: 2
+    }
   ],
   backgroundImage: {
     url: 'https://www.example.com/path/to/image.jpg',
     width: 1920,
-    height: 1080,
-  },
+    height: 1080
+  }
 }
 polygonDrawer.loadPolygons(sampleData, () => {
   console.log('Polygons loaded successfully')
