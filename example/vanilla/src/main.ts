@@ -35,7 +35,7 @@ const instance = new PolygonDrawer(
     addPointOnDoubleClickClose: false
   },
   {
-    onReady: (instance) => {
+    onReady: (instance: any) => {
       console.log('Canvas ready:', instance)
 
       const sampleData = {
@@ -139,7 +139,7 @@ document.getElementById('button5')!.onclick = () => {
     height: 1080
   })
 
-  drawer.renderPolygonsToImage(loadData, true).then((imageData) => {
+  drawer.renderPolygonsToImage(loadData, true).then((imageData: any) => {
     console.log('imageData :>> ', imageData)
 
     const img = document.createElement('img')
