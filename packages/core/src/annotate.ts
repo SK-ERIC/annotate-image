@@ -1012,7 +1012,11 @@ class AnnotateImage {
         result = true
       }
       else {
-        this.operateCursor = { pathType: type, pathIndex: idx, ...info }
+        this.operateCursor = {
+          pathType: type,
+          pathIndex: idx,
+          ...(info as any)
+        }
       }
     }
     else if (type === 'circle') {
