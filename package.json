@@ -41,6 +41,7 @@
   ],
   "scripts": {
     "build": "turbo run build --filter='./packages/*'",
+    "dev:fabric": "pnpm --filter=@annotate-image/fabric dev",
     "dev:vue": "pnpm --filter=@annotate-image/vue dev",
     "dev:react": "pnpm --filter=@annotate-image/react dev",
     "example:vue": "pnpm --filter=@annotate-image/example-vue dev",
@@ -49,10 +50,10 @@
     "lint:fix": "eslint --fix \"{packages,example}/**/*.{ts,tsx,js,vue,md}\"",
     "format": "pnpm run format:code && pnpm run lint:fix",
     "format:code": "prettier --write \"(packages|example)/**/*.(ts|tsx|js|vue|md)\"",
+    "test": "vitest",
     "prepublishOnly": "nr build",
     "release": "bumpp package.json packages/**/package.json",
-    "publish": "pnpm --filter=./packages/** publish --access public --no-git-checks --registry=https://registry.npmjs.org/",
-    "typecheck": "tsc --noEmit"
+    "publish": "pnpm --filter=./packages/** publish --access public --no-git-checks --registry=https://registry.npmjs.org/"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.23.0",
@@ -63,7 +64,8 @@
     "tsx": "^4.16.2",
     "turbo": "^2.0.7",
     "typescript": "^5.5.3",
-    "vite": "^5.3.4"
+    "vite": "^5.3.4",
+    "vitest": "^2.0.5"
   },
   "lint-staged": {
     "*.js": [
